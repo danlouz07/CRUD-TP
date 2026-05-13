@@ -3,6 +3,13 @@
 //en este caso los almacenados en el localStorage
 
 //funcion agregarPersona
+let personas = [];
+const agregarPersona = (nuevaPersona) => {
+    console.log(nuevaPersona);
+    personas.push(nuevaPersona);
+    localStorage.setItem("personas", JSON.stringify(personas)); 
+    // implementación de la funcións
+}
 
 
 //funcion Listado de todos los registros de Personas

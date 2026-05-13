@@ -13,19 +13,37 @@ document.addEventListener("DOMContentLoaded", () => {
         document.querySelector("#form-agregar").style.display = "block";
     });
 
-    const btnCerrarFormAgregar = document.querySelector(".btn-cerrar-formAgregar");
+
+    //Ocultar formulario "Agregar persona" desde el boton "cerrar" o X
+
+        const btnCerrarFormAgregar = document.querySelector(".btn-cerrar-formAgregar");
     btnCerrarFormAgregar.addEventListener("click", (event) => {
         event.preventDefault();
         document.querySelector("#form-agregar").style.display = "none";
     });
-
- 
-
-    //Ocultar formulario "Agregar persona" desde el boton "cerrar" o X
    
 
     
     //evento "submit" formulario "AgregarPersona"
+
+   
+const form_agregar = document.querySelector("#form-agregar");
+form_agregar.addEventListener("submit", (event) => {
+    event.preventDefault();
+const nuevaPersona = {
+    nombre: form_agregar.nombre.value,
+    dni: form_agregar.edad.value,
+    edad: form_agregar.dni.value
+};
+console.log(nuevaPersona); 
+agregarPersona(nuevaPersona); 
+form_agregar.reset();
+form_agregar.style.display = "none";
+})
+        //creamos un objeto persona con los datos capturados
+
+
+        //llamamos a la funcion agregarPersona del modulo personas.js para agregar la persona al array de personas
  
 
     //----------------------------------------------------------------------------------------------------------
@@ -43,4 +61,4 @@ document.addEventListener("DOMContentLoaded", () => {
 
     //evento "submit" formulario modificar
    
-})
+});
