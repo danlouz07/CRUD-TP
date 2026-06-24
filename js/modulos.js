@@ -1,34 +1,76 @@
-//este archivo contiene todas las funciones en la que intervienen los datos
-//funciones que efectivamente desarrollan el CRUD (Create, read, update, delete) de los datos involucrados
-//en este caso los almacenados en el localStorage
+// --- HELPERS PARA LOCALSTORAGE ---
+const obtenerPersonasLS = () => JSON.parse(localStorage.getItem("personas")) || [];
+const guardarPersonasLS = (datos) => localStorage.setItem("personas", JSON.stringify(datos));
 
-//funcion agregarPersona
-let personas = [];
-const agregarPersona = (nuevaPersona) => {
-    console.log(nuevaPersona);
-    personas.push(nuevaPersona);
-    localStorage.setItem("personas", JSON.stringify(personas)); 
-    // implementación de la funcións
+// --- FUNCIONES CRUD ---
+
+function guardarNuevaPersona(nuevaPersona) {
+    const listaPersonas = obtenerPersonasLS();
+    listaPersonas.push(nuevaPersona);
+    guardarPersonasLS(listaPersonas);
 }
 
+function renderizarPersonas(personasData = null) {
+    const contenedor = document.getElementById("listadoPersonas");
+    
+    // Si no pasan datos por parámetro, busca todos los de localStorage
+    const listaAMostrar = personasData ?? obtenerPersonasLS();
 
-//funcion Listado de todos los registros de Personas
+    let contenidoHTML = "";
+    listaAMostrar.forEach(item => {
+        contenidoHTML += `
+            <div class="persona">
+                <div class="info">
+                    <p>Nombre: ${item.nombre}</p>
+                    <p>Edad: ${item.edad}</p>
+                    <p>Dni: ${item.dni}</p>
+                </div>
+                <div class="botones">
+                    <button onclick="prepararFormularioEdicion('${item.dni}')">Modificar</button>
+                    <button onclick="borrarPersona('${item.dni}')">Eliminar</button>
+                </div>
+            </div>
+        `;
+    });
+    
+    contenedor.innerHTML = contenidoHTML;
+}
 
+function filtrarPersonas(nombreBusqueda, dniBusqueda) {
+    const listaPersonas = obtenerPersonasLS();
+    return listaPersonas.filter(item =>
+        item.nombre.toLowerCase().includes(nombreBusqueda.toLowerCase()) && item.dni.includes(dniBusqueda)
+    );
+}
 
-//funcion para buscar Personas por nombre o dni
+function prepararFormularioEdicion(dniBuscado) {
+    const listaPersonas = obtenerPersonasLS();
+    const personaEncontrada = listaPersonas.find(item => item.dni === dniBuscado);
 
+    if (!personaEncontrada) return;
 
-//funcion Listado de Personas con filtros de busqueda por nombre y/o dni
+    const formEdit = document.getElementById("form-modificar");
+    formEdit.querySelector("h3").textContent = `Modificar datos persona DNI ${personaEncontrada.dni}`;
+    formEdit.dni.value = personaEncontrada.dni;
+    formEdit.nombre.value = personaEncontrada.nombre;
+    formEdit.edad.value = personaEncontrada.edad;
+    formEdit.style.display = "block";
+}
 
+function actualizarDatosPersona(datosModificados) {
+    const listaPersonas = obtenerPersonasLS();
+    const index = listaPersonas.findIndex(item => item.dni === datosModificados.dni);
+    
+    if (index !== -1) {
+        listaPersonas[index].nombre = datosModificados.nombre;
+        listaPersonas[index].edad = datosModificados.edad;
+        guardarPersonasLS(listaPersonas);
+    }
+}
 
-//funcion para eliminar un registro de persona segun el DNI
-
-
-//funcion intermedia para modificar datos, carga datos guardados de una persona en el formulario y lo muestra
-
-
-//funcion modificar Datos de una persona
-
-
-
-
+function borrarPersona(dniEliminar) {
+    let listaPersonas = obtenerPersonasLS();
+    listaPersonas = listaPersonas.filter(item => item.dni !== dniEliminar);
+    guardarPersonasLS(listaPersonas);
+    renderizarPersonas();
+}
