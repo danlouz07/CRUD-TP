@@ -1,64 +1,59 @@
-// este archivo responde a los evento del DOM,
-// interactuando con el usuario y el modelo de datos desarrollado en modulos.js
-
 document.addEventListener("DOMContentLoaded", () => {
 
-    //cargamos listado de personas
+    renderizarPersonas();
 
+    const formAgregar = document.getElementById("form-agregar");
+    const formBuscar = document.getElementById("form-buscar");
+    const formModificar = document.getElementById("form-modificar");
 
-    //Mostrar formulario para agregar Persona desde el boton "Agregar Persona"
-
-    const btnAgregarPersona = document.querySelector("#btn-agregar");
-     btnAgregarPersona.addEventListener("click", () => {
-        document.querySelector("#form-agregar").style.display = "block";
+    // --- SECCIÓN: AGREGAR ---
+    document.getElementById("btn-agregar").addEventListener("click", () => {
+        formAgregar.style.display = "block";
     });
 
-
-    //Ocultar formulario "Agregar persona" desde el boton "cerrar" o X
-
-        const btnCerrarFormAgregar = document.querySelector(".btn-cerrar-formAgregar");
-    btnCerrarFormAgregar.addEventListener("click", (event) => {
-        event.preventDefault();
-        document.querySelector("#form-agregar").style.display = "none";
+    document.querySelector(".btn-cerrar-formAgregar").addEventListener("click", () => {
+        formAgregar.style.display = "none";
     });
-   
 
-    
-    //evento "submit" formulario "AgregarPersona"
+    formAgregar.addEventListener("submit", (e) => {
+        e.preventDefault();
+        guardarNuevaPersona({
+            nombre: formAgregar.nombre.value,
+            edad: formAgregar.edad.value,
+            dni: formAgregar.dni.value
+        });
+        formAgregar.reset();
+        formAgregar.style.display = "none";
+        renderizarPersonas();
+    });
 
-   
-const form_agregar = document.querySelector("#form-agregar");
-form_agregar.addEventListener("submit", (event) => {
-    event.preventDefault();
-const nuevaPersona = {
-    nombre: form_agregar.nombre.value,
-    dni: form_agregar.edad.value,
-    edad: form_agregar.dni.value
-};
-console.log(nuevaPersona); 
-agregarPersona(nuevaPersona); 
-form_agregar.reset();
-form_agregar.style.display = "none";
-})
-        //creamos un objeto persona con los datos capturados
+    // --- SECCIÓN: BUSCAR / FILTRAR ---
+    formBuscar.addEventListener("submit", (e) => {
+        e.preventDefault();
+        const resultados = filtrarPersonas(formBuscar.nombre.value, formBuscar.dni.value);
+        renderizarPersonas(resultados);
+    });
 
+    document.getElementById("btn-filtros").addEventListener("click", () => {
+        formBuscar.reset();
+        renderizarPersonas();
+    });
 
-        //llamamos a la funcion agregarPersona del modulo personas.js para agregar la persona al array de personas
- 
+    // --- SECCIÓN: MODIFICAR ---
+    document.querySelector(".btn-cerrar-formModif").addEventListener("click", () => {
+        formModificar.style.display = "none";
+    });
 
-    //----------------------------------------------------------------------------------------------------------
-    //El evento de mostraFormularioModificar y cerrar formulario queda dentro de la funcion mostrarPersonas
-    //porque pueden ser varios botones y es necesario individualizarlos para capturar los datos de cada persona
-    //lo mismo para el boton eliminar queda dentro de la funcion mostrarPersonas
-    //----------------------------------------------------------------------------------------------------------
+    formModificar.addEventListener("submit", (e) => {
+        e.preventDefault();
+        actualizarDatosPersona({
+            nombre: formModificar.nombre.value,
+            edad: formModificar.edad.value,
+            dni: formModificar.dni.value
+        });
+        formModificar.reset();
+        formModificar.style.display = "none";
+        renderizarPersonas();
+    });
 
-
-    //evento "submit" formulario buscar
-   
-
-    //boton limpiar filtros
-   
-
-    //evento "submit" formulario modificar
-   
 });
