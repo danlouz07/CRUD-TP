@@ -55,13 +55,8 @@ function modificarPersona(datos) {
 }
 
 function eliminarPersona(dni) {
-
-    if (confirm("¿Está seguro de que desea eliminar este registro?")) {
-
-        let personas = JSON.parse(localStorage.getItem("personas")) || [];
-        personas = personas.filter(p => p.dni !== dni);
-        localStorage.setItem("personas", JSON.stringify(personas));
-        mostrarPersonas();
-    }
-    
+    let personas = JSON.parse(localStorage.getItem("personas")) || [];
+    personas = personas.filter(p => p.dni !== dni);
+    localStorage.setItem("personas", JSON.stringify(personas));
+    mostrarPersonas();
 }
